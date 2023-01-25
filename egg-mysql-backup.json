@@ -1,0 +1,72 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2023-01-25T17:14:12+01:00",
+    "name": "Mysql Backup",
+    "author": "unknown@unknown.com",
+    "description": null,
+    "features": null,
+    "docker_images": {
+        "quay.io\/parkervcp\/pterodactyl-images:db_mariadb": "quay.io\/parkervcp\/pterodactyl-images:db_mariadb"
+    },
+    "file_denylist": [],
+    "startup": "export DATABASES=$(mysql --defaults-extra-file=settings.cnf -NBe\"SELECT schema_name FROM information_schema.schemata WHERE schema_name NOT IN ('mysql','information_schema','performance_schema')\") && export NOW=$(date +\"%Y-%m-%dT%T\") && mysqldump --defaults-extra-file=settings.cnf --databases {{DATABASES}} > backup-{{NOW}}.sql && echo \"Finished\"",
+    "config": {
+        "files": "{\r\n    \"settings.cnf\": {\r\n        \"parser\": \"ini\",\r\n        \"find\": {\r\n            \"mysql.password\": \"{{env.MYSQL_PASSWORD}}\",\r\n            \"mysql.user\": \"{{env.MYSQL_USERNAME}}\",\r\n            \"mysql.host\": \"{{env.MYSQL_HOST}}\",\r\n            \"mysql.port\": \"{{env.MYSQL_PORT}}\",\r\n            \"mysqldump.password\": \"{{env.MYSQL_PASSWORD}}\",\r\n            \"mysqldump.user\": \"{{env.MYSQL_USERNAME}}\",\r\n            \"mysqldump.host\": \"{{env.MYSQL_HOST}}\",\r\n            \"mysqldump.port\": \"{{env.MYSQL_PORT}}\"\r\n        }\r\n    }\r\n}",
+        "startup": "{\r\n   \"done\": \"Finished\"   \r\n}",
+        "logs": "{}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": null,
+            "container": "mariadb:10.3",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Host",
+            "description": "",
+            "env_variable": "MYSQL_HOST",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Port",
+            "description": "",
+            "env_variable": "MYSQL_PORT",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer|max:65500",
+            "field_type": "text"
+        },
+        {
+            "name": "Username",
+            "description": "",
+            "env_variable": "MYSQL_USERNAME",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Password",
+            "description": "",
+            "env_variable": "MYSQL_PASSWORD",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string",
+            "field_type": "text"
+        }
+    ]
+}
